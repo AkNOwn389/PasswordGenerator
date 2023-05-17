@@ -159,6 +159,7 @@ class GenerateUserPassword:
             results_second.append(a)
                 
         #test for duplicate names
+        self.total = 0
         final_results = []
         for a in results_second:
             sys.stdout.write(f"\033[1000D\033[1;92m{self.total} checking for duplicates..")
@@ -170,6 +171,7 @@ class GenerateUserPassword:
             os.mkdir("results")
         except OSError:
             pass
+        self.total = 0
         f = open(f"results/{self.first_name}.txt", "a")
         for a in final_results:
             sys.stdout.write(f"\033[1000D\033[1;92m{self.total} writing results in file...")
