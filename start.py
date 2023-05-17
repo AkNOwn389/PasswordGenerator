@@ -38,6 +38,12 @@ class GenerateUserPassword:
         self.birth_day = pick()
         print("\033[1;92m║ \033[1;94m—> \033[1;92mInput More Details About User\n\033[1;92m║ \033[1;92mWith Space ex: dog/food/place etc.")
         self.etc = pick()
+        print("\033[1;92m║ \033[1;94m—> \033[1;92mCheck Generated Password For Duplicate? y/N")
+        dup = pick()
+        if dup[0] is "y" or dup[0] is "Y":
+            self.isChekablePassword = True
+        else:
+            self.isChekablePassword = False
         for a in self.first_name, self.last_name, self.middle_name:
             if a is not "skip":
                 self.name.append(a)
@@ -82,6 +88,7 @@ class GenerateUserPassword:
                         
         possible_etc = []
         for a in self.strings:
+            possible_etc.append(a)
             sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
             sys.stdout.flush()
             self.total += 1
@@ -96,6 +103,7 @@ class GenerateUserPassword:
                     possible_etc.append(str(a)+str(b)+str(c))
         possible_name_patterns_with_birth = []
         for a in possible_name_patterns:
+            possible_etc.append(a)
             sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
             sys.stdout.flush()
             self.total += 1
@@ -157,20 +165,24 @@ class GenerateUserPassword:
                 b = str(a).replace(str(a)[0], str(a)[0].upper())
                 results_second.append(b)
             results_second.append(a)
-                
+        print(f"\r\r\033[1;93mTotal Generated: \033[1;97m{self.total}")
         #test for duplicate names
         self.total = 0
         final_results = []
-        for a in results_second:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} checking for duplicates..")
-            sys.stdout.flush()
-            self.total += 1
-            if not a in final_results:
-                final_results.append(a)
+        if self.isChekablePassword:
+            for a in results_second:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} checking for duplicates..")
+                sys.stdout.flush()
+                self.total += 1
+                if not a in final_results:
+                    final_results.append(a)
+        else:
+            final_results = results_second
         try:
             os.mkdir("results")
         except OSError:
             pass
+        
         self.total = 0
         f = open(f"results/{self.first_name}.txt", "a")
         for a in final_results:
