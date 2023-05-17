@@ -2,5 +2,5 @@
  
  
  #manual
- `git clone repo`
- `and run python start.py`
+ `git clone repo
+ and run python start.py`
