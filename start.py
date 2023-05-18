@@ -213,7 +213,7 @@ class GenerateUserPassword:
             f.write(str(a)+"\n")
         f.close()
         print("\r\r\r\r\r"+line)
-        print(f"\033[1;92m║ \033[1;94m—> \033[1;93m Result stored in result/{self.first_name}.txt")
+        print(f"\033[1;92m║ \033[1;94m—> \033[1;93m Result stored in result/{self.first_name}.txt \033[1;92mTotal: {self.total}")
         input("\033[1;92mExit")
         home()
             
