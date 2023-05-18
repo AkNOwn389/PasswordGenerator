@@ -46,22 +46,33 @@ class GenerateUserPassword:
             self.isChekablePassword = False
         for a in self.first_name, self.last_name, self.middle_name:
             if a is not "skip":
-                self.name.append(a)
-                self.strings.append(a)
+                self.name.append(a.lower())
+                self.strings.append(a.lower())
+                self.name.append(a.upper())
+                self.strings.append(a.upper())
         for string in self.etc.split(" "):
-            self.strings.append(string)
-        self.numbers.append(int(self.birth_day))
-        self.numbers.append(int(self.birth_month))
-        self.numbers.append(int(self.birth_year))
+            self.strings.append(string.lower())
+            self.strings.append(string.upper())
+        self.numbers.append(str(self.birth_day))
+        self.numbers.append(str(self.birth_month))
+        self.numbers.append(str(self.birth_year))
         self.file_name = str(self.first_name)
         self.run()
         
-    def run(self) -> None:
-        results = []
+    def createPossibleNamePatterns(self) -> list[str]:
         possible_name_patterns = []
         for a in self.name:
+            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+            sys.stdout.flush()
+            self.total += 1
             for b in self.name:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
                 for c in self.name:
+                    sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                    sys.stdout.flush()
+                    self.total += 1
                     if "skip" not in list[a, b, c]:
                         possible_name_patterns.append(str(a)+str(b)+str(c))
                     elif a is "skip":
@@ -70,11 +81,26 @@ class GenerateUserPassword:
                         possible_name_patterns.append(str(a)+str(c))
                     elif c is "skip":
                         possible_name_patterns.append(str(a)+str(b))
-                        
+        for i in possible_name_patterns:
+            if str(i)[0] in string.ascii_lowercase:
+                a = str(i).replace(str(i)[0], str(i)[0].upper())
+                possible_name_patterns.append(a)
+        return possible_name_patterns
+    
+    def createPossibleBirthPatterns(self) -> list[str]:
         possible_birth_patterns = []
         for a in self.numbers:
+            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+            sys.stdout.flush()
+            self.total += 1
             for b in self.numbers:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
                 for c in self.numbers:
+                    sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                    sys.stdout.flush()
+                    self.total += 1
                     possible_birth_patterns.append(str(a)+str(b)+str(c))
                     if len(str(a)) is 1 and str(a) is not "0":
                         a = "0" + str(a)
@@ -85,99 +111,94 @@ class GenerateUserPassword:
                     elif len(str(c)) is 1 and str(c) is not "0":
                         c = "0" + str(c)
                         possible_birth_patterns.append(str(a)+str(b)+str(c))
-                        
-        possible_etc = []
+                    elif len(str(a)) is 4:
+                        a = a[:1]
+                        possible_birth_patterns.append(str(a)+str(b)+str(c))
+        return possible_birth_patterns
+    def createPossibleEtc(self) -> list[str]:
+        possible_etc_patterns = []
         for a in self.strings:
-            possible_etc.append(a)
             sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
             sys.stdout.flush()
             self.total += 1
-            for b in possible_name_patterns:
+            for b in self.numbers:
                 sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
                 sys.stdout.flush()
                 self.total += 1
-                for c in possible_birth_patterns:
-                    sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-                    sys.stdout.flush()
-                    self.total += 1
-                    possible_etc.append(str(a)+str(b)+str(c))
-        possible_name_patterns_with_birth = []
-        for a in possible_name_patterns:
-            possible_etc.append(a)
+                possible_etc_patterns.append(str(a)+str(b))
+                possible_etc_patterns.append(str(b)+str(a))
+        for i in possible_etc_patterns:
             sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
             sys.stdout.flush()
             self.total += 1
-            for b in possible_birth_patterns:
+            if str(i)[0] in string.ascii_lowercase:
+                a = str(i).replace(str(i)[0], str(i)[0].upper())
+                possible_etc_patterns.append(a)
+        to_upper = []
+        for i in possible_etc_patterns:    
+            to_upper.append(str(i).upper())
+        possible_etc_patterns.extend(to_upper)
+        return possible_etc_patterns
+    
+    def createPossibleNamePatternsWithBirthday(self, names, birth) -> list[str]:
+        a = []
+        for b in self.name:
+            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+            sys.stdout.flush()
+            self.total += 1
+            for c in self.numbers:
                 sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
                 sys.stdout.flush()
                 self.total += 1
-                possible_name_patterns_with_birth.append(str(a)+str(b))
-                possible_name_patterns_with_birth.append(str(b)+str(a))
-        possible_etc_patterns_with_birth = []
-        for a in possible_etc:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            for b in possible_birth_patterns:
+                a.append(str(b)+str(c))
+                a.append(str(c)+str(b))
+            for d in birth:
                 sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
                 sys.stdout.flush()
                 self.total += 1
-                possible_etc_patterns_with_birth.append(str(a)+str(b))
-                possible_etc_patterns_with_birth.append(str(b)+str(a))
-            for c in self.strings:
+                a.append(str(d)+str(b))
+                a.append(str(b)+str(d))
+        for b in names:
+            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+            sys.stdout.flush()
+            self.total += 1
+            for c in self.numbers:
                 sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
                 sys.stdout.flush()
                 self.total += 1
-                possible_etc_patterns_with_birth.append(str(c)+str(a))
-                possible_etc_patterns_with_birth.append(str(a)+str(c))
-        for a in possible_birth_patterns:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            results.append(a)
-        for a in possible_etc:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            results.append(a)
-        for a in possible_name_patterns:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            results.append(a)
-        for a in possible_name_patterns_with_birth:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            results.append(a)   
-        for a in possible_etc_patterns_with_birth:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            results.append(a)
-        results_second = []
-        for a in results:
-            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
-            sys.stdout.flush()
-            self.total += 1
-            results_second.append(str(a).upper())
-            if str(a)[0] in string.ascii_lowercase:
-                b = str(a).replace(str(a)[0], str(a)[0].upper())
-                results_second.append(b)
-            results_second.append(a)
-        print(f"\r\r\033[1;93mTotal Generated: \033[1;97m{self.total}")
+                a.append(str(b)+str(c))
+                a.append(str(c)+str(b))
+            for d in birth:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                a.append(str(d)+str(b))
+                a.append(str(b)+str(d))
+        return a
+        
+
+    def run(self) -> None:
+        results = []
+        arrays_of_names = self.createPossibleNamePatterns()
+        arrays_of_birth = self.createPossibleBirthPatterns()
+        arrays_of_etc_with_birthday = self.createPossibleEtc()
+        arrays_of_names_with_birthday = self.createPossibleNamePatternsWithBirthday(arrays_of_names, arrays_of_birth)
+        results.extend(arrays_of_names)
+        results.extend(arrays_of_birth)
+        results.extend(arrays_of_etc_with_birthday)
+        results.extend(arrays_of_names_with_birthday)
         #test for duplicate names
         self.total = 0
         final_results = []
         if self.isChekablePassword:
-            for a in results_second:
+            for a in results:
                 sys.stdout.write(f"\033[1000D\033[1;92m{self.total} checking for duplicates..")
                 sys.stdout.flush()
                 self.total += 1
                 if not a in final_results:
                     final_results.append(a)
         else:
-            final_results = results_second
+            final_results = results
         try:
             os.mkdir("results")
         except OSError:
@@ -191,7 +212,7 @@ class GenerateUserPassword:
             self.total += 1
             f.write(str(a)+"\n")
         f.close()
-        print(line)
+        print("\r\r\r\r\r"+line)
         print(f"\033[1;92m║ \033[1;94m—> \033[1;93m Result stored in result/{self.first_name}.txt")
         input("\033[1;92mExit")
         home()
