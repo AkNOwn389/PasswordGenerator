@@ -11,7 +11,14 @@ logo=""" \033[1;92m█████╗ ██╗  ██╗███╗   ██�
 ██╔══██║██╔═██╗ ██║╚██╗██║██║   ██║██║███╗██║██║╚██╗██║
 ██║  ██║██║  ██╗██║ ╚████║╚██████╔╝╚███╔███╔╝██║ ╚████║
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═══╝"""
-
+LEET_LETTER = ['a','s', 'i', 'A', "S", 'I']
+LEET_DICT = {'A':"4", 'a':"4", 'I': "1", 'i': "1", "S": "$", "s": "$"}
+def leetChanger(String):
+    a = String
+    for i in str(String):
+        if i in LEET_LETTER:
+            a = str(a).replace(i, LEET_DICT[str(i)])
+    return a
 class GenerateUserPassword:
     def __init__(self) -> None:
         self.start()
@@ -50,6 +57,8 @@ class GenerateUserPassword:
                 self.strings.append(a.lower())
                 self.name.append(a.upper())
                 self.strings.append(a.upper())
+                
+                
         for string in self.etc.split(" "):
             self.strings.append(string.lower())
             self.strings.append(string.upper())
@@ -75,16 +84,25 @@ class GenerateUserPassword:
                     self.total += 1
                     if "skip" not in list[a, b, c]:
                         possible_name_patterns.append(str(a)+str(b)+str(c))
+                        possible_name_patterns.append(str(a)+"_"+str(b)+"_"+str(c))
                     elif a is "skip":
                         possible_name_patterns.append(str(b)+str(c))
+                        possible_name_patterns.append(str(b)+"_"+str(c))
                     elif b is "skip":
                         possible_name_patterns.append(str(a)+str(c))
+                        possible_name_patterns.append(str(a)+"_"+str(c))
                     elif c is "skip":
                         possible_name_patterns.append(str(a)+str(b))
+                        possible_name_patterns.append(str(a)+"_"+str(b))
         for i in possible_name_patterns:
             if str(i)[0] in string.ascii_lowercase:
                 a = str(i).replace(str(i)[0], str(i)[0].upper())
                 possible_name_patterns.append(a)
+        
+        for possible in possible_name_patterns:
+            leetName = leetChanger(possible)
+            if not leetName in possible_name_patterns:
+                possible_name_patterns.append(leetName)
         return possible_name_patterns
     
     def createPossibleBirthPatterns(self) -> list[str]:
@@ -138,6 +156,10 @@ class GenerateUserPassword:
         for i in possible_etc_patterns:    
             to_upper.append(str(i).upper())
         possible_etc_patterns.extend(to_upper)
+        for possible in possible_etc_patterns:
+            leetName = leetChanger(possible)
+            if not leetName in possible_etc_patterns:
+                possible_etc_patterns.append(leetName)
         return possible_etc_patterns
     
     def createPossibleNamePatternsWithBirthday(self, names, birth) -> list[str]:
@@ -174,8 +196,87 @@ class GenerateUserPassword:
                 self.total += 1
                 a.append(str(d)+str(b))
                 a.append(str(b)+str(d))
+        for possible in a:
+            leetName = leetChanger(possible)
+            if not leetName in a:
+                a.append(leetName)
         return a
-        
+    
+    def createPossibleNamePatternsWithDotAndBirthday(self, names, birth):
+        result = []
+        for name in self.strings:
+            for number in birth:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"."+str(number))
+                result.append(str(number)+"."+str(name))
+            for number in self.numbers:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"."+str(number))
+                result.append(str(number)+"."+str(name))
+        for name in names:
+            for number in birth:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"."+str(number))
+                result.append(str(number)+"."+str(name))
+            for number in self.numbers:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"."+str(number))
+                result.append(str(number)+"."+str(name))
+        for possible in result:
+            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+            sys.stdout.flush()
+            self.total += 1
+            leetName = leetChanger(possible)
+            if not leetName in result:
+                result.append(leetName)
+                
+        return result
+
+    def createPossibleNamePatternsWithSpaceAndBirthday(self, names, birth):
+        result = []
+        for name in self.strings:
+            for number in birth:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"_"+str(number))
+                result.append(str(number)+"_"+str(name))
+            for number in self.numbers:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"_"+str(number))
+                result.append(str(number)+"_"+str(name))
+        for name in names:
+            for number in birth:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"_"+str(number))
+                result.append(str(number)+"_"+str(name))
+            for number in self.numbers:
+                sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+                sys.stdout.flush()
+                self.total += 1
+                result.append(str(name)+"_"+str(number))
+                result.append(str(number)+"_"+str(name))
+        for possible in result:
+            sys.stdout.write(f"\033[1000D\033[1;92m{self.total} processing..")
+            sys.stdout.flush()
+            self.total += 1
+            leetName = leetChanger(possible)
+            if not leetName in result:
+                result.append(leetName)
+                
+        return result
 
     def run(self) -> None:
         results = []
@@ -183,10 +284,14 @@ class GenerateUserPassword:
         arrays_of_birth = self.createPossibleBirthPatterns()
         arrays_of_etc_with_birthday = self.createPossibleEtc()
         arrays_of_names_with_birthday = self.createPossibleNamePatternsWithBirthday(arrays_of_names, arrays_of_birth)
+        arrays_of_names_with_dot_and_birthday = self.createPossibleNamePatternsWithDotAndBirthday(arrays_of_names, arrays_of_birth)
+        arrays_of_names_with_space_and_birthday = self.createPossibleNamePatternsWithSpaceAndBirthday(arrays_of_names, arrays_of_birth)
         results.extend(arrays_of_names)
         results.extend(arrays_of_birth)
         results.extend(arrays_of_etc_with_birthday)
         results.extend(arrays_of_names_with_birthday)
+        results.extend(arrays_of_names_with_dot_and_birthday)
+        results.extend(arrays_of_names_with_space_and_birthday)
         #test for duplicate names
         self.total = 0
         final_results = []
